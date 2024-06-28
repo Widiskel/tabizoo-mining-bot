@@ -42,12 +42,13 @@ export class API {
         referrer: this.url,
         referrerPolicy: "strict-origin-when-cross-origin",
       };
+      logger.info(`${method} : ${url}`);
+      logger.info(`Request Header : ${JSON.stringify(headers)}`);
 
       if (method !== "GET") {
         options.body = `${JSON.stringify(body)}`;
+        logger.info(`Request Body : ${options.body}`);
       }
-      logger.info(`${method} : ${url}`);
-      logger.info(`Request Header : ${JSON.stringify(headers)}`);
 
       const res = await fetch(url, options);
 
