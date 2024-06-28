@@ -26,7 +26,7 @@ async function operation(user) {
     await kibble.missionQuest(task);
   }
   console.log(`-> All task Completed`);
-  const tapList = Helper.randomTapCount(kibble.statistic.energy, 2, 5);
+  const tapList = Helper.randomTapCount(kibble.statistic.energy, 5, 10);
   for (const tap of tapList) {
     console.log();
     await kibble.tap(tap);
@@ -84,6 +84,7 @@ async function startBot() {
         `-> Sleeping for ${Helper.msToTime(1000000)} before run again`
       );
       console.log();
+      logger.info(`BOT DELAYED`);
       await Helper.sleep(1000000);
       await startBot().then(resolve);
     } catch (error) {

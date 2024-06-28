@@ -98,9 +98,9 @@ export class Kibble extends API {
 
   async tap(click) {
     return new Promise(async (resolve, reject) => {
-      console.log(`-> Tapping for ${click} x`);
+      console.log(`-> Tapping for ${Math.round(click)} x`);
       await this.fetch("/points/click", "POST", this.token, {
-        click_count: click,
+        click_count: Math.round(click),
         type_x: 1,
       })
         .then(async (data) => {

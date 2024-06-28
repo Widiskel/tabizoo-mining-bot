@@ -132,6 +132,7 @@ export class Telegram {
 
   async disconnect() {
     await this.client.disconnect();
+    await this.client.destroy();
     this.peer = undefined;
     this.sessionName = undefined;
   }
