@@ -2,25 +2,21 @@ import { Helper } from "../utils/helper.js";
 import logger from "../utils/logger.js";
 
 export class API {
-  constructor(query) {
-    this.query = query;
-    this.url = "https://api.sphynx.meme/";
+  constructor() {
+    this.url = "https://api-game.kibble.exchange";
+    this.ua = Helper.randomUserAgent();
   }
 
   generateHeaders(token) {
-    const security = Helper.requestSecurity(token, this.query);
     const headers = {
       Accept: "application/json, text/plain, */*",
       "Accept-Encoding": "gzip, deflate, br, zstd",
       "Accept-Language": "en-US,en;q=0.9,id;q=0.8",
       "Content-Type": "application/json",
-      "App-Nonce": security["app-nonce"],
-      "App-Sign": security["app-sign"],
       Priority: "u=1, i",
       Referer: `${this.url}`,
       Origin: `${this.url}`,
-      "User-Agent": Helper.randomUserAgent(),
-      "Telegram-Init-Data": this.query,
+      "User-Agent": this.ua,
       "Sec-Fetch-Dest": "empty",
       "Sec-Fetch-Mode": "cors",
       "Sec-Fetch-Site": "same-site",
@@ -28,7 +24,7 @@ export class API {
     if (this.token) {
       headers.Authorization = token;
     }
-    console.log(headers);
+    // console.log(headers);
     return headers;
   }
 

@@ -1,4 +1,5 @@
 node_modules
-account.js
-log/app.log
+src/config/config.js
+log/*
 test.js
+sessions/*

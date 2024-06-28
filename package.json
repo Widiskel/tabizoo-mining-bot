@@ -1,21 +1,23 @@
 {
-  "name": "bot",
+  "name": "kibble-bot",
   "version": "1.0.0",
   "type": "module",
-  "description": "BOT",
+  "description": "Kibble TON Bot",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "node test.js"
   },
   "keywords": [
-    "bot"
+    "kibble","kibble-bot"
   ],
   "author": "Widiskel",
   "license": "ISC",
   "dependencies": {
+    "input": "^1.0.1",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
+    "telegram": "^2.22.2",
     "winston": "^3.13.0"
   }
 }

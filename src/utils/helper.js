@@ -1,7 +1,13 @@
 // import moment from "moment";
 import moment from "moment-timezone";
+import fs from "fs";
+import path from "path";
 
 export class Helper {
+  static sleep = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
   static randomUserAgent() {
     const list_useragent = [
       "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/125.0.6422.80 Mobile/15E148 Safari/604.1",
@@ -22,5 +28,50 @@ export class Helper {
   static getCurrentTimestamp() {
     const timestamp = moment().tz("Asia/Singapore").unix();
     return timestamp.toString();
+  }
+
+  static getSession(sessionName) {
+    try {
+      const files = fs.readdirSync(path.resolve(sessionName));
+      const session = [];
+      files.forEach((file) => {
+        session.push(file);
+      });
+      return session;
+    } catch (error) {
+      throw Error(`Error reading sessions directory: ${error},`);
+    }
+  }
+
+  static resetSession(sessionName) {
+    try {
+      const files = fs.readdirSync(path.resolve(sessionName));
+      console.log("Deleting Sessions...");
+      files.forEach((file) => {
+        fs.rm(
+          `${path.join(path.resolve("sessions"), file)}`,
+          { recursive: true },
+          (err) => {
+            if (err) throw err;
+          }
+        );
+      });
+      console.info("Sessions reset successfully");
+    } catch (error) {
+      throw Error(`Error deleting session files: ${error},`);
+    }
+  }
+
+  static createDir(dirName) {
+    try {
+      const dirPath = `sessions/${dirName}`;
+      console.log(dirPath);
+      fs.mkdir(dirPath, { recursive: true }, (err) => {
+        if (err) throw err;
+      });
+      return dirPath;
+    } catch (error) {
+      throw Error(`Error deleting session files: ${error},`);
+    }
   }
 }
