@@ -52,7 +52,7 @@ export class API {
       const res = await fetch(url, options);
 
       logger.info(`Response : ${res.status} ${res.statusText}`);
-      if (res.ok) {
+      if (res.ok || res.status == 400) {
         const data = await res.json();
         logger.info(`Response Data : ${JSON.stringify(data)}`);
         return data;

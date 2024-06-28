@@ -29,6 +29,8 @@ export class Kibble extends API {
       await this.fetch("/users/statistic", "GET", this.token)
         .then((data) => {
           this.statistic = data;
+          console.log(`Energy          : ${this.statistic.energy}`);
+          console.log(`Points          : ${this.statistic.points}`);
           resolve();
         })
         .catch(async (err) => {
@@ -47,6 +49,7 @@ export class Kibble extends API {
           this.uncompletedTaskList = task.filter((item) => {
             if (item.status == "OPEN") return item;
           });
+          console.log(`Uncomplete Task : ${this.uncompletedTaskList.length}`);
           resolve();
         })
         .catch(async (err) => {
@@ -66,7 +69,47 @@ export class Kibble extends API {
           console.log(`-> Update task list and statistic`);
           await this.getTask();
           await this.getStatistic();
+          console.log(`-> Update task list and statistic`);
           console.log();
+          resolve();
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+  async claimDailyBonus() {
+    return new Promise(async (resolve, reject) => {
+      await this.fetch("/tasks/daily-quest", "GET", this.token)
+        .then(async (data) => {
+          if (data.status == 400) {
+            console.log(`-> Daily bonus claimed already`);
+          } else {
+            console.log(`-> Successfully claim daily bonus`);
+            await this.getStatistic();
+          }
+          resolve();
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  async tap(click) {
+    return new Promise(async (resolve, reject) => {
+      console.log(`-> Tapping for ${click} x`);
+      await this.fetch("/points/click", "POST", this.token, {
+        click_count: click,
+        type_x: 1,
+      })
+        .then(async (data) => {
+          this.statistic.points = data.points;
+          this.statistic.energy = data.energy;
+          console.log(`-> Successfully tap`);
+          console.log(`Energy          : ${this.statistic.energy}`);
+          console.log(`Points          : ${this.statistic.points}`);
+
           resolve();
         })
         .catch((err) => {

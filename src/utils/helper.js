@@ -74,4 +74,45 @@ export class Helper {
       throw Error(`Error deleting session files: ${error},`);
     }
   }
+
+  static random(min, max) {
+    const rand = Math.floor(Math.random() * (max - min + 1)) + min;
+    return rand;
+  }
+
+  static msToTime(milliseconds) {
+    const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+    const remainingMillisecondsAfterHours = milliseconds % (1000 * 60 * 60);
+    const minutes = Math.floor(remainingMillisecondsAfterHours / (1000 * 60));
+    const remainingMillisecondsAfterMinutes =
+      remainingMillisecondsAfterHours % (1000 * 60);
+    const seconds = Math.round(remainingMillisecondsAfterMinutes / 1000);
+
+    return `${hours} Hours ${minutes} Minutes ${seconds} Seconds`;
+  }
+
+  static randomTapCount(total, minLength, maxLength) {
+    const length =
+      Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+    const result = [];
+    let sum = 0;
+
+    for (let i = 0; i < length; i++) {
+      const rand = Math.random();
+      result.push(rand);
+      sum += rand;
+    }
+
+    const normalizedArray = result.map((num) =>
+      Math.round((num / sum) * total)
+    );
+    const currentSum = normalizedArray.reduce((acc, num) => acc + num, 0);
+    const error = total - currentSum;
+
+    if (error !== 0) {
+      normalizedArray[0] += error;
+    }
+
+    return normalizedArray;
+  }
 }
