@@ -64,14 +64,19 @@ export class Helper {
 
   static createDir(dirName) {
     try {
-      const dirPath = `sessions/${dirName}`;
+      const sessionsPath = "sessions";
+      const dirPath = path.join(sessionsPath, dirName);
+
+      if (!fs.existsSync(sessionsPath)) {
+        fs.mkdirSync(sessionsPath);
+      }
+
+      fs.mkdirSync(dirPath, { recursive: true });
+
       console.log(dirPath);
-      fs.mkdir(dirPath, { recursive: true }, (err) => {
-        if (err) throw err;
-      });
       return dirPath;
     } catch (error) {
-      throw Error(`Error deleting session files: ${error},`);
+      throw new Error(`Error creating directory: ${error}`);
     }
   }
 
