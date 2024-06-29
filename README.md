@@ -31,3 +31,7 @@ Kibble game on ton Bot
 4. enter your phone number starting with countrycode ex : `628xxxxxxxx`
 5. after creating sessions, choose 3 start bot
 6. if something wrong with your sessions, reset sessions first
+
+## Note
+
+This bot using telegram sessions. if you ever one of my bot that use telegram sessions, you can just copy the sessions folder to this bot.

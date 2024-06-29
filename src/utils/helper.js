@@ -32,6 +32,10 @@ export class Helper {
 
   static getSession(sessionName) {
     try {
+      const sessionsPath = "sessions";
+      if (!fs.existsSync(sessionsPath)) {
+        fs.mkdirSync(sessionsPath);
+      }
       const files = fs.readdirSync(path.resolve(sessionName));
       const session = [];
       files.forEach((file) => {

@@ -1,3 +1,4 @@
+import { Config } from "./src/config/config.js";
 import { Kibble } from "./src/core/kibble.js";
 import { Telegram } from "./src/core/telegram.js";
 import { Helper } from "./src/utils/helper.js";
@@ -52,6 +53,14 @@ async function startBot() {
   return new Promise(async (resolve, reject) => {
     try {
       logger.info(`BOT STARTED`);
+      if (
+        Config.TELEGRAM_APP_ID == undefined ||
+        Config.TELEGRAM_APP_HASH == undefined
+      ) {
+        throw new Error(
+          "Please configure your TELEGRAM_APP_ID and TELEGRAM_APP_HASH first"
+        );
+      }
       const tele = await new Telegram();
       await tele.init();
 
