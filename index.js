@@ -49,6 +49,7 @@ async function operation(user) {
   );
 }
 
+const init = false;
 async function startBot() {
   return new Promise(async (resolve, reject) => {
     try {
@@ -62,8 +63,11 @@ async function startBot() {
         );
       }
       const tele = await new Telegram();
-      await tele.init();
-
+      if(init==false) {
+        await tele.init();
+        init = true;
+      } 
+      
       const sessionList = Helper.getSession("sessions");
       for (const acc of sessionList) {
         await tele.useSession("sessions/" + acc);
