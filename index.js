@@ -49,7 +49,7 @@ async function operation(user) {
   );
 }
 
-const init = false;
+let init = false;
 async function startBot() {
   return new Promise(async (resolve, reject) => {
     try {
