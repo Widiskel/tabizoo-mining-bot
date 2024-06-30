@@ -166,7 +166,9 @@ export class Telegram {
       );
       logger.info(`Session ${this.session} - Webview Connected`);
 
-      // const authUrl = webView.toJSON();
+      const authUrl = webView.url;
+      console.log(authUrl);
+      return Helper.getTelegramQuery(authUrl, 2);
     } catch (error) {
       throw error;
     }

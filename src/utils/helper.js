@@ -66,6 +66,75 @@ export class Helper {
     }
   }
 
+  static getTelegramQuery(url, type) {
+    const hashIndex = url.indexOf("#");
+    if (hashIndex === -1) {
+      throw new Error("No query string found in the URL.");
+    }
+
+    const queryString = url.substring(hashIndex + 1);
+    const decodedQueryString = queryString.split("&");
+    const param = decodedQueryString[0]
+      .split("&")[0]
+      .replace("tgWebAppData=", "");
+
+    if (!param) {
+      throw new Error("Param not found in the query string.");
+    }
+
+    if (type == "1") {
+      return param;
+    } else if (type == "2") {
+      return this.decodeQueryString(param);
+    } else {
+      const newParam = this.decodeQueryString(param);
+      return this.jsonToInitParam(newParam);
+    }
+  }
+
+  static jsonToInitParam(dataString) {
+    const newData = parse(dataString);
+
+    if (newData.user) {
+      const userObject = JSON.parse(newData.user);
+      newData.user = encodeURIComponent(JSON.stringify(userObject));
+    }
+
+    const resultArray = [];
+    for (const [key, value] of Object.entries(newData)) {
+      resultArray.push(`${key}=${value}`);
+    }
+    const result = resultArray.join("&");
+
+    return result;
+  }
+
+  static decodeQueryString(encodedString) {
+    const decodedString = decodeURIComponent(encodedString);
+    const paramsArray = decodedString.split("&");
+    const paramsObject = {};
+
+    paramsArray.forEach((param) => {
+      const [key, value] = param.split("=");
+      if (key === "user") {
+        paramsObject[key] = JSON.parse(decodeURIComponent(value));
+      } else {
+        paramsObject[key] = value;
+      }
+    });
+
+    const resultArray = [];
+    for (const [key, value] of Object.entries(paramsObject)) {
+      if (key === "user") {
+        resultArray.push(`${key}=${JSON.stringify(value)}`);
+      } else {
+        resultArray.push(`${key}=${value}`);
+      }
+    }
+
+    return resultArray.join("&");
+  }
+
   static createDir(dirName) {
     try {
       const sessionsPath = "sessions";

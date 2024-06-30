@@ -1,5 +1,7 @@
 import { API } from "../api/api.js";
 import logger from "../utils/logger.js";
+import { sha256 } from "js-sha256";
+import { RULE_GAME } from "./rule.js";
 
 export class Kibble extends API {
   constructor(account) {
@@ -99,10 +101,27 @@ export class Kibble extends API {
   async tap(click) {
     return new Promise(async (resolve, reject) => {
       console.log(`-> Tapping for ${Math.round(click)} x`);
-      await this.fetch("/points/click", "POST", this.token, {
-        click_count: Math.round(click),
-        type_x: 1,
-      })
+      const timeStartSendData = new Date().getTime() / 1000;
+      const points = await this.validPoint(Math.round(click));
+      const data = this.statistic;
+      const taps =
+        click === 0
+          ? Math.round(points / 4)
+          : click < data.energy
+          ? click
+          : data.energy - 10;
+      const encryptData = `points=${points}&taps=${taps}&synctime=${timeStartSendData}`;
+      const signatureVerify = await this.sha256EncryptAsync(encryptData);
+
+      const tapBody = {
+        taps: Math.round(click),
+        points: points,
+        synctime: timeStartSendData,
+        signature: signatureVerify,
+      };
+
+      console.log(tapBody);
+      await this.fetch("/points/click", "POST", this.token, tapBody)
         .then(async (data) => {
           this.statistic.points = data.points;
           this.statistic.energy = data.energy;
@@ -116,5 +135,41 @@ export class Kibble extends API {
           reject(err);
         });
     });
+  }
+
+  sha256EncryptAsync = async (data) => {
+    const dataToBase64 = Buffer.from(data).toString("base64");
+    const base64Key = "JgVqqTmv1CsWMP9QJs9WEu981VZahrR2";
+    const hashStr = sha256.hmac.update(`${base64Key}`, `${dataToBase64}`);
+    return hashStr.hex();
+  };
+
+  validPoint(tapCount, userLevel) {
+    let totalPoints = 0;
+    const levelMultiplier = RULE_GAME.POINT_BY_LEVEL[`lv${userLevel}`] || 1;
+
+    if (tapCount > RULE_GAME.KEEP_CLICK.three_time.target) {
+      totalPoints +=
+        (tapCount - RULE_GAME.KEEP_CLICK.three_time.target) *
+        RULE_GAME.KEEP_CLICK.three_time.value;
+      tapCount = RULE_GAME.KEEP_CLICK.three_time.target;
+    }
+    if (tapCount > RULE_GAME.KEEP_CLICK.two_time.target) {
+      totalPoints +=
+        (tapCount - RULE_GAME.KEEP_CLICK.two_time.target) *
+        RULE_GAME.KEEP_CLICK.two_time.value;
+      tapCount = RULE_GAME.KEEP_CLICK.two_time.target;
+    }
+    if (tapCount > RULE_GAME.KEEP_CLICK.one_time.target) {
+      totalPoints +=
+        (tapCount - RULE_GAME.KEEP_CLICK.one_time.target) *
+        RULE_GAME.KEEP_CLICK.one_time.value;
+      tapCount = RULE_GAME.KEEP_CLICK.one_time.target;
+    }
+
+    totalPoints += tapCount * 1;
+    totalPoints *= levelMultiplier;
+
+    return totalPoints;
   }
 }

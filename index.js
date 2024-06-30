@@ -27,18 +27,18 @@ async function operation(user) {
     await kibble.missionQuest(task);
   }
   console.log(`-> All task Completed`);
-  if (kibble.statistic.energy > 10) {
-    const tapList = Helper.randomTapCount(kibble.statistic.energy, 5, 10);
-    for (const tap of tapList) {
-      console.log();
-      await kibble.tap(tap);
-      const rand = Helper.random(2000, 5000);
-      console.log(`-> Sleeping for ${rand / 1000} Second`);
-      await Helper.sleep(rand);
-    }
+
+  if (kibble.statistic.energy > 100) {
+    console.log();
+    await kibble.tap(kibble.statistic.energy - Helper.random(1, 10));
+
+    const rand = Helper.random(2000, 5000);
+    console.log(`-> Sleeping for ${rand / 1000} Second`);
+    await Helper.sleep(rand);
+
     console.log(`-> Auto tap executed successfully`);
   } else {
-    console.log(`-> Energy to small`);
+    console.log(`-> Energy to small waiting for energy to be filled`);
   }
 
   console.log();
