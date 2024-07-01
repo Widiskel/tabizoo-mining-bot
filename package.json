@@ -15,10 +15,10 @@
   "author": "Widiskel",
   "license": "ISC",
   "dependencies": {
-    "input": "^1.0.1",
     "js-sha256": "^0.11.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
+    "input": "^1.0.1",
     "telegram": "^2.22.2",
     "winston": "^3.13.0"
   }

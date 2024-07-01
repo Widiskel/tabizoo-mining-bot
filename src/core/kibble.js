@@ -139,7 +139,7 @@ export class Kibble extends API {
 
   sha256EncryptAsync = async (data) => {
     const dataToBase64 = Buffer.from(data).toString("base64");
-    const base64Key = "JgVqqTmv1CsWMP9QJs9WEu981VZahrR2";
+    const base64Key = "sy5khue9T2Nakezfj3SwpuLp5wD1QlVT";
     const hashStr = sha256.hmac.update(`${base64Key}`, `${dataToBase64}`);
     return hashStr.hex();
   };

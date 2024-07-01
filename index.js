@@ -63,11 +63,11 @@ async function startBot() {
         );
       }
       const tele = await new Telegram();
-      if(init==false) {
+      if (init == false) {
         await tele.init();
         init = true;
-      } 
-      
+      }
+
       const sessionList = Helper.getSession("sessions");
       for (const acc of sessionList) {
         await tele.useSession("sessions/" + acc);
@@ -116,6 +116,9 @@ async function startBot() {
   try {
     logger.info("");
     logger.info("Application Started");
+    console.log("KIBBLE BOT");
+    console.log("By : Widiskel");
+    console.log("Dont forget to run git pull to keep up to date");
     await startBot();
   } catch (error) {
     console.log("Error During executing bot", error);
