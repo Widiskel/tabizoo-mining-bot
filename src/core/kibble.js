@@ -102,7 +102,10 @@ export class Kibble extends API {
     return new Promise(async (resolve, reject) => {
       console.log(`-> Tapping for ${Math.round(click)} x`);
       const timeStartSendData = new Date().getTime() / 1000;
-      const points = await this.validPoint(Math.round(click));
+      const points = await this.validPoint(
+        Math.round(click),
+        this.statistic.level
+      );
       const data = this.statistic;
       const taps =
         click === 0
