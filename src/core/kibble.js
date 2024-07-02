@@ -11,7 +11,7 @@ export class Kibble extends API {
 
   async login() {
     return new Promise(async (resolve, reject) => {
-      await this.fetch("/auth/connect-telegram", "POST", undefined, {
+      await this.fetch("/auth/connect-telegram", "POST", null, {
         telegram_id: this.account.id,
         telegram_name: this.account.firstName + " " + this.account.lastName,
         referral_code: "",

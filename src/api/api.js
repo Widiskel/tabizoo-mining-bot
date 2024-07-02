@@ -4,6 +4,7 @@ import logger from "../utils/logger.js";
 export class API {
   constructor() {
     this.url = "https://api-game.kibble.exchange";
+    this.origin = "https://clicker.kibble.exchange";
     this.ua = Helper.randomUserAgent();
   }
 
@@ -14,8 +15,8 @@ export class API {
       "Accept-Language": "en-US,en;q=0.9,id;q=0.8",
       "Content-Type": "application/json",
       Priority: "u=1, i",
-      Referer: `${this.url}`,
-      Origin: `${this.url}`,
+      Referer: `${this.origin}/`,
+      Origin: `${this.origin}`,
       "User-Agent": this.ua,
       "Sec-Fetch-Dest": "empty",
       "Sec-Fetch-Mode": "cors",
@@ -24,7 +25,7 @@ export class API {
     if (this.token) {
       headers.Authorization = token;
     }
-    // console.log(headers);
+
     return headers;
   }
 
