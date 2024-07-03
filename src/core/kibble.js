@@ -113,19 +113,19 @@ export class Kibble extends API {
           : click < data.energy
           ? click
           : data.energy - 10;
-      const encryptData = `points=${points}&taps=${taps}&synctime=${timeStartSendData}`;
+      const encryptData = `points=${points}&taps=${taps}`;
       const signatureVerify = await this.sha256EncryptAsync(encryptData);
 
       const tapBody = {
         taps: Math.round(click),
         points: points,
-        synctime: timeStartSendData,
         signature: signatureVerify,
       };
 
       console.log(tapBody);
       await this.fetch("/points/click", "POST", this.token, tapBody)
         .then(async (data) => {
+          console.log(data);
           this.statistic.points = data.points;
           this.statistic.energy = data.energy;
           console.log(`-> Successfully tap`);
