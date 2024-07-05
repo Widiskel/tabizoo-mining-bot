@@ -44,10 +44,14 @@ export class Kibble extends API {
   }
   async getTask() {
     return new Promise(async (resolve) => {
-      await this.fetch("/tasks/list", "GET", this.token)
+      await this.fetch(
+        "/users/tasks?pagination[page]=1&pagination[perPage]=50",
+        "GET",
+        this.token
+      )
         .then((data) => {
           /** @type {any[]} */
-          const task = data.userTasks;
+          const task = data;
           this.uncompletedTaskList = task.filter((item) => {
             if (item.status == "OPEN") return item;
           });
@@ -56,8 +60,7 @@ export class Kibble extends API {
         })
         .catch(async (err) => {
           logger.error(JSON.stringify(err));
-          console.log(err.message);
-          await this.getTask().then(resolve);
+          console.log(`${err.message} Skipping get task`);
         });
     });
   }
