@@ -32,17 +32,10 @@ async function operation(user, query, queryObj) {
       await Helper.sleep(2000, user, `Successfully Check In`, tabizoo);
     }
 
-    if (tabizoo.mining.nextClaimTimeInSecond) {
+    if (tabizoo.mining.nextClaimTimeInSecond == 0) {
       twist.log(`Try To Claiming mining Reward`, user, tabizoo);
-      const mining = await tabizoo.claimMining();
-      await Helper.sleep(
-        2000,
-        user,
-        mining
-          ? `Successfully Claim mining`
-          : `Failed to Claim mining reward, mining still in progress`,
-        tabizoo
-      );
+      await tabizoo.claimMining();
+      await Helper.sleep(2000, user, `Mining Reward Claimed`, tabizoo);
     }
 
     // while (tabizoo.user.coins > RULE_GAME.LEVELUP[tabizoo.user.level + 1]) {
@@ -51,7 +44,7 @@ async function operation(user, query, queryObj) {
     await Helper.sleep(
       2000,
       user,
-      `Successfully Upgrade Mining Level`,
+      `Mining Level Will Will Be Upgraded Automatically If Balance Is Enough`,
       tabizoo
     );
     // }
