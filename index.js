@@ -11,16 +11,16 @@ async function operation(user, query, queryObj) {
     const tabizoo = new Tabizoo(user, query, queryObj);
     twist.log(`Getting User Info`, user, tabizoo);
     await tabizoo.login();
-    await Helper.sleep(5000, user, `Successfully Get User Info`, tabizoo);
+    await Helper.sleep(2000, user, `Successfully Get User Info`, tabizoo);
 
     twist.log(`Getting Mining Info`, user, tabizoo);
     await tabizoo.getUserMining();
-    await Helper.sleep(5000, user, `Successfully Get Mining Info`, tabizoo);
+    await Helper.sleep(2000, user, `Successfully Get Mining Info`, tabizoo);
 
     twist.log(`Getting Reward Pool Info`, user, tabizoo);
     await tabizoo.getUserReward();
     await Helper.sleep(
-      5000,
+      2000,
       user,
       `Successfully Get Reward Pool Info`,
       tabizoo
@@ -28,7 +28,7 @@ async function operation(user, query, queryObj) {
 
     twist.log(`Try To Check In`, user, tabizoo);
     await tabizoo.checkIn();
-    await Helper.sleep(5000, user, `Successfully Check In`, tabizoo);
+    await Helper.sleep(2000, user, `Successfully Check In`, tabizoo);
 
     while (tabizoo.user.coins > RULE_GAME.LEVELUP[tabizoo.user.level + 1]) {
       twist.log(`Try To Upgrade Mining Level`, user, tabizoo);
