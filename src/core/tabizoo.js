@@ -1,4 +1,5 @@
 import { API } from "../api/api.js";
+import logger from "../utils/logger.js";
 
 export class Tabizoo extends API {
   constructor(account, query, queryObj) {
@@ -14,6 +15,19 @@ export class Tabizoo extends API {
       await this.fetch("/api/user/sign-in", "POST", "omit")
         .then((data) => {
           this.user = data.user;
+          resolve();
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+  async getUserProfile() {
+    // console.log(this.query);
+    return new Promise(async (resolve, reject) => {
+      await this.fetch("/api/user/profile", "GET", "omit")
+        .then((data) => {
+          this.user = data;
           resolve();
         })
         .catch((err) => {
@@ -83,6 +97,21 @@ export class Tabizoo extends API {
         .then(async (data) => {
           this.user = data;
           await this.getUserMining().then(resolve);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  async claimMining() {
+    // console.log(this.query);
+    return new Promise(async (resolve, reject) => {
+      await this.fetch("/api/mining/claim", "POST", "omit")
+        .then(async (data) => {
+          await this.getUserMining().then(resolve);
+          await this.getUserProfile().then(resolve);
+          return data;
         })
         .catch((err) => {
           reject(err);
