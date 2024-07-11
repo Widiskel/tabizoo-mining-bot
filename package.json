@@ -1,8 +1,8 @@
 {
-  "name": "tabizoo-bot",
+  "name": "tabizoo-mining-bot",
   "version": "1.0.0",
   "type": "module",
-  "description": "Tabizoo TON Bot",
+  "description": "Tabizoo Mining Bot",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -10,10 +10,16 @@
   },
   "keywords": [
     "tabizoo",
-    "tabizoo-bot"
+    "tabizoo-bot",
+    "tabi",
+    "tabizoo mining bot"
   ],
   "author": "Widiskel",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Widiskel/tabizoo-mining-bot.git"
+  },
   "dependencies": {
     "input": "^1.0.1",
     "moment": "^2.30.1",
