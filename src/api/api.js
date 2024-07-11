@@ -2,40 +2,41 @@ import { Helper } from "../utils/helper.js";
 import logger from "../utils/logger.js";
 
 export class API {
-  constructor() {
-    this.url = "https://api-game.kibble.exchange";
-    this.origin = "https://clicker.kibble.exchange";
+  constructor(query) {
+    this.url = "https://app.tabibot.com";
+    this.host = "app.tabibot.com";
     this.ua = Helper.randomUserAgent();
+    this.query = query;
   }
 
-  generateHeaders(token) {
+  generateHeaders() {
     const headers = {
       Accept: "application/json, text/plain, */*",
-      "Accept-Encoding": "gzip, deflate, br, zstd",
       "Accept-Language": "en-US,en;q=0.9,id;q=0.8",
       "Content-Type": "application/json",
-      Priority: "u=1, i",
-      Referer: `${this.origin}/`,
-      Origin: `${this.origin}`,
-      "User-Agent": this.ua,
-      "Sec-Fetch-Dest": "empty",
+      "Sec-Fetch-Site": "same-origin",
       "Sec-Fetch-Mode": "cors",
-      "Sec-Fetch-Site": "same-site",
+      Host: this.host,
+      Origin: this.url,
+      Referer: this.url + "/",
+      "Sec-Fetch-Dest": "empty",
+      rawdata: this.query,
     };
-    if (this.token) {
-      headers.Authorization = token;
-    }
+
+    // if (token) {
+    //   headers.Authorization = token;
+    // }
 
     return headers;
   }
 
-  async fetch(endpoint, method, token, body = {}) {
+  async fetch(endpoint, method, cred = "include", body = {}) {
     try {
       const url = `${this.url}${endpoint}`;
-      const headers = this.generateHeaders(token);
+      const headers = this.generateHeaders();
       const options = {
         cache: "default",
-        credentials: "include",
+        credentials: cred,
         headers,
         method,
         mode: "cors",
@@ -59,7 +60,7 @@ export class API {
         logger.info(`Response Data : ${JSON.stringify(data)}`);
         return data;
       } else {
-        throw new Error(res.statusText);
+        throw new Error(`${res.status} - ${res.statusText}`);
       }
     } catch (err) {
       logger.error(`Error : ${err.message}`);

@@ -3,3 +3,4 @@ src/config/config.js
 log/*
 test.js
 sessions/*
+src/reference/*

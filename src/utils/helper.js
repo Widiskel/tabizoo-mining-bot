@@ -3,10 +3,45 @@ import moment from "moment-timezone";
 import fs from "fs";
 import path from "path";
 import { parse, stringify } from "querystring";
+import twist from "./twist.js";
 
 export class Helper {
-  static sleep = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+  static sleep = (ms, acc, msg, obj) => {
+    return new Promise((resolve) => {
+      let remainingMilliseconds = ms;
+
+      if (acc) {
+        twist.log(msg, acc, obj, `Delaying for ${this.msToTime(ms)}`);
+      } else {
+        twist.info(`Delaying for ${this.msToTime(ms)}`);
+      }
+
+      const interval = setInterval(() => {
+        remainingMilliseconds -= 1000;
+        if (acc) {
+          twist.log(
+            msg,
+            acc,
+            obj,
+            `Delaying for ${this.msToTime(remainingMilliseconds)}`
+          );
+        } else {
+          twist.info(`Delaying for ${this.msToTime(remainingMilliseconds)}`);
+        }
+
+        if (remainingMilliseconds <= 0) {
+          clearInterval(interval);
+          resolve();
+        }
+      }, 1000);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        twist.log(msg, acc, obj);
+        twist.clearInfo();
+        resolve();
+      }, ms);
+    });
   };
 
   static randomUserAgent() {
@@ -170,28 +205,19 @@ export class Helper {
     return `${hours} Hours ${minutes} Minutes ${seconds} Seconds`;
   }
 
-  static randomTapCount(total, minLength, maxLength) {
-    const length =
-      Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
-    const result = [];
-    let sum = 0;
+  static queryToJSON(query) {
+    const queryObject = {};
+    const pairs = query.split("&");
 
-    for (let i = 0; i < length; i++) {
-      const rand = Math.random();
-      result.push(rand);
-      sum += rand;
-    }
+    pairs.forEach((pair) => {
+      const [key, value] = pair.split("=");
+      if (key === "user") {
+        queryObject[key] = JSON.parse(decodeURIComponent(value));
+      } else {
+        queryObject[key] = decodeURIComponent(value);
+      }
+    });
 
-    const normalizedArray = result.map((num) =>
-      Math.round((num / sum) * total)
-    );
-    const currentSum = normalizedArray.reduce((acc, num) => acc + num, 0);
-    const error = total - currentSum;
-
-    if (error !== 0) {
-      normalizedArray[0] += error;
-    }
-
-    return normalizedArray;
+    return queryObject;
   }
 }

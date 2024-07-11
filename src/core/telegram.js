@@ -4,13 +4,14 @@ import { Config } from "../config/config.js";
 import { Api, TelegramClient } from "telegram";
 import { StoreSession } from "telegram/sessions/StoreSession.js";
 import logger from "../utils/logger.js";
+import { FloodWaitError } from "telegram/errors/RPCErrorList.js";
 
 export class Telegram {
   storeSession;
 
   constructor() {
     this.sessionName = "sessions";
-    this.url = "https://kibble-game-dev.netlify.app/";
+    this.url = "https://app.tabibot.com/";
   }
 
   async init() {
@@ -25,7 +26,7 @@ export class Telegram {
   async onBoarding() {
     try {
       const choice = await input.text(
-        "Welcome to Kibble Bot \nBy : Widiskel \n \nLets getting started. \n1. Create Session. \n2. Reset Sessions \n3. Start Bot \n \nInput your choice :"
+        "Welcome to Tabizoo Bot \nBy : Widiskel \n \nLets getting started. \n1. Create Session. \n2. Reset Sessions \n3. Start Bot \n \nInput your choice :"
       );
       if (choice == 1) {
         await this.sessionCreation();
@@ -108,7 +109,7 @@ export class Telegram {
       logger.info(`Session ${this.session} - Resolving Peer`);
       while (this.peer == undefined) {
         try {
-          this.peer = await this.client.getEntity("KibbleClickBot");
+          this.peer = await this.client.getEntity("tabizoobot");
           break;
         } catch (error) {
           if (error instanceof FloodWaitError) {
@@ -166,10 +167,10 @@ export class Telegram {
         })
       );
       logger.info(`Session ${this.session} - Webview Connected`);
-      // https://clicker.kibble.exchange/#tgWebAppData=query_id%3DAAGnbflTAgAAAKdt-VOyCnnH%26user%3D%7B%22id%22%3A5703822759%2C%22first_name%22%3A%22Widi%22%2C%22last_name%22%3A%22Saputro%22%2C%22username%22%3A%22Wskel%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D%26auth_date%3D1719831259%26hash%3De2647dd46bb9308103b20c27ba75fe8343295eed09f53d2bc927a59975d0f3c4&tgWebAppVersion=7.6&tgWebAppPlatform=tdesktop&tgWebAppThemeParams={"accent_text_color"%3A"%23168acd"%2C"bg_color"%3A"%23ffffff"%2C"button_color"%3A"%2340a7e3"%2C"button_text_color"%3A"%23ffffff"%2C"destructive_text_color"%3A"%23d14e4e"%2C"header_bg_color"%3A"%23ffffff"%2C"hint_color"%3A"%23999999"%2C"link_color"%3A"%23168acd"%2C"secondary_bg_color"%3A"%23f1f1f1"%2C"section_bg_color"%3A"%23ffffff"%2C"section_header_text_color"%3A"%23168acd"%2C"section_separator_color"%3A"%23e7e7e7"%2C"subtitle_text_color"%3A"%23999999"%2C"text_color"%3A"%23000000"}
+      // https://clicker.tabizoo.exchange/#tgWebAppData=query_id%3DAAGnbflTAgAAAKdt-VOyCnnH%26user%3D%7B%22id%22%3A5703822759%2C%22first_name%22%3A%22Widi%22%2C%22last_name%22%3A%22Saputro%22%2C%22username%22%3A%22Wskel%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D%26auth_date%3D1719831259%26hash%3De2647dd46bb9308103b20c27ba75fe8343295eed09f53d2bc927a59975d0f3c4&tgWebAppVersion=7.6&tgWebAppPlatform=tdesktop&tgWebAppThemeParams={"accent_text_color"%3A"%23168acd"%2C"bg_color"%3A"%23ffffff"%2C"button_color"%3A"%2340a7e3"%2C"button_text_color"%3A"%23ffffff"%2C"destructive_text_color"%3A"%23d14e4e"%2C"header_bg_color"%3A"%23ffffff"%2C"hint_color"%3A"%23999999"%2C"link_color"%3A"%23168acd"%2C"secondary_bg_color"%3A"%23f1f1f1"%2C"section_bg_color"%3A"%23ffffff"%2C"section_header_text_color"%3A"%23168acd"%2C"section_separator_color"%3A"%23e7e7e7"%2C"subtitle_text_color"%3A"%23999999"%2C"text_color"%3A"%23000000"}
       const authUrl = webView.url;
-      console.log(authUrl);
-      return Helper.getTelegramQuery(authUrl, 2);
+      // console.log(authUrl);
+      return Helper.getTelegramQuery(authUrl, 3);
     } catch (error) {
       throw error;
     }
