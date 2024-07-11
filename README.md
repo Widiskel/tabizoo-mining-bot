@@ -42,7 +42,7 @@ Feel free to fork and contribute adding more feature thanks.
 ## SUPPORT
 
 want to support me for creating another bot ?
-buy me a coffee on
+star my repo or buy me a coffee on
 
 EVM : `0x0fd08d2d42ff086bf8c6d057d02d802bf217559a`
 
