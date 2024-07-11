@@ -7,46 +7,55 @@ import logger from "./src/utils/logger.js";
 import twist from "./src/utils/twist.js";
 
 async function operation(user, query, queryObj) {
-  const tabizoo = new Tabizoo(user, query, queryObj);
-  twist.log(`Getting User Info`, user, tabizoo);
-  await tabizoo.login();
-  await Helper.sleep(5000, user, `Successfully Get User Info`, tabizoo);
+  try {
+    const tabizoo = new Tabizoo(user, query, queryObj);
+    twist.log(`Getting User Info`, user, tabizoo);
+    await tabizoo.login();
+    await Helper.sleep(5000, user, `Successfully Get User Info`, tabizoo);
 
-  twist.log(`Getting Mining Info`, user, tabizoo);
-  await tabizoo.getUserMining();
-  await Helper.sleep(5000, user, `Successfully Get Mining Info`, tabizoo);
+    twist.log(`Getting Mining Info`, user, tabizoo);
+    await tabizoo.getUserMining();
+    await Helper.sleep(5000, user, `Successfully Get Mining Info`, tabizoo);
 
-  twist.log(`Getting Reward Pool Info`, user, tabizoo);
-  await tabizoo.getUserReward();
-  await Helper.sleep(5000, user, `Successfully Get Reward Pool Info`, tabizoo);
-
-  twist.log(`Try To Check In`, user, tabizoo);
-  await tabizoo.checkIn();
-  await Helper.sleep(5000, user, `Successfully Check In`, tabizoo);
-
-  while (tabizoo.user.coins > RULE_GAME.LEVELUP[tabizoo.user.level + 1]) {
-    twist.log(`Try To Upgrade Mining Level`, user, tabizoo);
-    await tabizoo.levelUp();
+    twist.log(`Getting Reward Pool Info`, user, tabizoo);
+    await tabizoo.getUserReward();
     await Helper.sleep(
-      1000,
+      5000,
       user,
-      `Successfully Upgrade Mining Level`,
+      `Successfully Get Reward Pool Info`,
       tabizoo
     );
+
+    twist.log(`Try To Check In`, user, tabizoo);
+    await tabizoo.checkIn();
+    await Helper.sleep(5000, user, `Successfully Check In`, tabizoo);
+
+    while (tabizoo.user.coins > RULE_GAME.LEVELUP[tabizoo.user.level + 1]) {
+      twist.log(`Try To Upgrade Mining Level`, user, tabizoo);
+      await tabizoo.levelUp();
+      await Helper.sleep(
+        1000,
+        user,
+        `Successfully Upgrade Mining Level`,
+        tabizoo
+      );
+    }
+
+    await Helper.sleep(
+      tabizoo.mining.nextClaimTimeInSecond * 1000,
+      user,
+      `Waiting for retry again in ${Helper.msToTime(
+        tabizoo.mining.nextClaimTimeInSecond * 1000
+      )} to Claim mining Reward`,
+      tabizoo
+    );
+
+    twist.clear();
+    twist.clearInfo();
+    await operation(user, query, queryObj);
+  } catch (error) {
+    throw error;
   }
-
-  await Helper.sleep(
-    tabizoo.mining.nextClaimTimeInSecond * 1000,
-    user,
-    `Waiting for retry again in ${Helper.msToTime(
-      tabizoo.mining.nextClaimTimeInSecond * 1000
-    )} to Claim mining Reward`,
-    tabizoo
-  );
-
-  twist.clear();
-  twist.clearInfo();
-  await operation(user, query, queryObj);
 }
 
 let init = false;
@@ -94,6 +103,7 @@ async function startBot() {
       });
 
       await Promise.all(promiseList);
+      resolve();
     } catch (error) {
       logger.info(`BOT STOPPED`);
       logger.error(JSON.stringify(error));
