@@ -33,7 +33,7 @@ Tabizoo Bot, is Tabi Mining game on Telegram.
 
 ## Note
 
-This bot using telegram sessions. if you ever one of my bot that use telegram sessions, you can just copy the sessions folder to this bot.
+This bot using telegram sessions. if you ever use one of my bot that use telegram sessions, you can just copy the sessions folder to this bot.
 
 ## CONTRIBUTE
 
