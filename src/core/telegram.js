@@ -25,13 +25,26 @@ export class Telegram {
   }
   async onBoarding() {
     try {
-      const choice = await input.text(
-        "Welcome to Tabizoo Bot \nBy : Widiskel \n \nLets getting started. \n1. Create Session. \n2. Reset Sessions \n3. Start Bot \n \nInput your choice :"
-      );
+      let ctx =
+        "Welcome to Tabizoo Bot \nBy : Widiskel \n \nLets getting started.\n\nYour Session List:\n";
+      const sessionList = Helper.getSession("sessions");
+
+      if (sessionList.length == 0) {
+        ctx += "<empty> \n \nPlease enter Session Name :";
+      } else {
+        for (const sess of sessionList) {
+          ctx += `- ${sess}\n`;
+        }
+      }
+      ctx += "\n \nPlease Choose a menu: \n";
+      ctx +=
+        "\n \n1. Create Session. \n2. Reset Sessions \n3. Start Bot \n \nInput your choice :";
+      const choice = await input.text(ctx);
       if (choice == 1) {
         await this.sessionCreation();
       } else if (choice == 2) {
         Helper.resetSession(this.sessionName);
+        await Helper.sleep(3000);
         await this.onBoarding();
       } else if (choice == 3) {
         if (Helper.getSession(this.sessionName)?.length == 0) {
@@ -68,7 +81,7 @@ export class Telegram {
       logger.info(`Session ${this.sessionName} - Created`);
       console.log(`Session ${this.sessionName} - Created`);
       this.storeSession.save();
-      await Helper.sleep(2000);
+      await Helper.sleep(3000);
       await this.init();
     } catch (error) {
       throw error;

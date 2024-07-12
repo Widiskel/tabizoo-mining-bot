@@ -29,11 +29,11 @@ Tabizoo Bot, is Tabi Mining game on Telegram.
 3. enter session name
 4. enter your phone number starting with countrycode ex : `+628xxxxxxxx`
 5. after creating sessions, choose 3 start bot
-6. if something wrong with your sessions, reset sessions first
+6. if something wrong with your sessions, reset sessions first, to cancel running bot press `ctrl+c` twice, and start again [from No 1.](#setup-session).
 
 ## Note
 
-This bot using telegram sessions. if you ever use one of my bot that use telegram sessions, you can just copy the sessions folder to this bot.
+This bot using telegram sessions. if you ever use one of my bot that use telegram sessions, you can just copy the sessions folder to this bot. Also for the telegram APP ID and Hash you can use it on another bot.
 
 ## CONTRIBUTE
 
@@ -42,7 +42,7 @@ Feel free to fork and contribute adding more feature thanks.
 ## SUPPORT
 
 want to support me for creating another bot ?
-star my repo or buy me a coffee on
+**star** my repo or buy me a coffee on
 
 EVM : `0x0fd08d2d42ff086bf8c6d057d02d802bf217559a`
 
