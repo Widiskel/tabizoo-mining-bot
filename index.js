@@ -10,50 +10,46 @@ async function operation(user, query, queryObj) {
   try {
     const tabizoo = new Tabizoo(user, query, queryObj);
     twist.log(`Getting User Info`, user, tabizoo);
-    await tabizoo.login();
+    await tabizoo.getUserProfile();
     await Helper.sleep(2000, user, `Successfully Get User Info`, tabizoo);
 
     twist.log(`Getting Mining Info`, user, tabizoo);
     await tabizoo.getUserMining();
     await Helper.sleep(2000, user, `Successfully Get Mining Info`, tabizoo);
 
-    twist.log(`Getting Reward Pool Info`, user, tabizoo);
-    await tabizoo.getUserReward();
-    await Helper.sleep(
-      2000,
-      user,
-      `Successfully Get Reward Pool Info`,
-      tabizoo
-    );
+    twist.log(`Getting Spin Info`, user, tabizoo);
+    await tabizoo.getSpinInfo();
+    await Helper.sleep(2000, user, `Successfully Get Spin Info`, tabizoo);
 
-    if (tabizoo.user.hasCheckedIn == false) {
+    let checkInDate = new Date(tabizoo.user.check_in_date).toDateString();
+    let today = new Date().toDateString();
+    if (checkInDate !== today) {
       twist.log(`Try To Check In`, user, tabizoo);
       await tabizoo.checkIn();
       await Helper.sleep(2000, user, `Successfully Check In`, tabizoo);
     }
 
-    if (tabizoo.mining.nextClaimTimeInSecond == 0) {
+    let nextClaimTimestamp = tabizoo.mining.next_claim_timestamp;
+    nextClaimTimestamp = nextClaimTimestamp / 1000;
+    let now = Date.now();
+    let delay = nextClaimTimestamp - now;
+    if (delay <= 0) {
       twist.log(`Try To Claiming mining Reward`, user, tabizoo);
       await tabizoo.claimMining();
       await Helper.sleep(2000, user, `Mining Reward Claimed`, tabizoo);
     }
 
-    // while (tabizoo.user.coins > RULE_GAME.LEVELUP[tabizoo.user.level + 1]) {
-    twist.log(`Try To Upgrade Mining Level`, user, tabizoo);
-    await tabizoo.levelUp();
-    await Helper.sleep(
-      2000,
-      user,
-      `Mining Level Will Will Be Upgraded Automatically If Balance Is Enough`,
-      tabizoo
-    );
-    // }
+    twist.log(`Try Play Spin`, user, tabizoo);
+    while (tabizoo.spin.energy.energy != 0) {
+      await tabizoo.playSpin();
+      await Helper.sleep(2000, user, `Successfully Play Spin`, tabizoo);
+    }
 
     await Helper.sleep(
-      tabizoo.mining.nextClaimTimeInSecond * 1000,
+      delay,
       user,
       `Waiting for retry again in ${Helper.msToTime(
-        tabizoo.mining.nextClaimTimeInSecond * 1000
+        delay
       )} to Claim mining Reward`,
       tabizoo
     );

@@ -39,9 +39,13 @@ Status : ${msg}
 
     const mining = tabizoo.mining ?? {};
     const rate = mining.rate ?? "-";
-    const limit = mining.topLimit ?? "-";
+    const limit = mining.top_limit ?? "-";
     const current = mining.current ?? "-";
-    const claim = mining.nextClaimTimeInSecond ?? "-";
+    let nextClaimTimestamp = mining.next_claim_timestamp;
+    nextClaimTimestamp = nextClaimTimestamp / 1000;
+    let now = Date.now();
+    let diff = nextClaimTimestamp - now;
+    const claim = diff ?? "-";
 
     this.twisters.put(acc.id, {
       text: `
@@ -55,7 +59,7 @@ Check In Streak    : ${streak}
 Mining Rate        : ${rate}
 Mining limit       : ${limit}
 Current            : ${current}
-Claim In           : ${Helper.msToTime(claim * 1000)}
+Claim In           : ${Helper.msToTime(claim)}
 
 Status : ${msg}
 Delay : ${delay}

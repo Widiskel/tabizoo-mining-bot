@@ -3,8 +3,8 @@ import logger from "../utils/logger.js";
 
 export class API {
   constructor(query) {
-    this.url = "https://app.tabibot.com";
-    this.host = "app.tabibot.com";
+    this.url = "https://api.tabibot.com";
+    this.host = "api.tabibot.com";
     this.ua = Helper.randomUserAgent();
     this.query = query;
   }
@@ -17,8 +17,8 @@ export class API {
       "Sec-Fetch-Site": "same-origin",
       "Sec-Fetch-Mode": "cors",
       Host: this.host,
-      Origin: this.url,
-      Referer: this.url + "/",
+      Origin: "https://miniapp.tabibot.com",
+      Referer: "https://miniapp.tabibot.com/",
       "Sec-Fetch-Dest": "empty",
       rawdata: this.query,
     };
@@ -30,13 +30,12 @@ export class API {
     return headers;
   }
 
-  async fetch(endpoint, method, cred = "include", body = {}) {
+  async fetch(endpoint, method, body = {}) {
     try {
       const url = `${this.url}${endpoint}`;
       const headers = this.generateHeaders();
       const options = {
         cache: "default",
-        credentials: cred,
         headers,
         method,
         mode: "cors",

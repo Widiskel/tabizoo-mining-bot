@@ -12,7 +12,7 @@ export class Tabizoo extends API {
   async login() {
     // console.log(this.query);
     return new Promise(async (resolve, reject) => {
-      await this.fetch("/api/user/sign-in", "POST", "omit")
+      await this.fetch("/api/user/sign-in", "POST")
         .then((data) => {
           this.user = data.user;
           resolve();
@@ -25,9 +25,9 @@ export class Tabizoo extends API {
   async getUserProfile() {
     // console.log(this.query);
     return new Promise(async (resolve, reject) => {
-      await this.fetch("/api/user/profile", "GET", "omit")
+      await this.fetch("/api/user/v1/profile", "GET")
         .then((data) => {
-          this.user = data;
+          this.user = data.data.user;
           resolve();
         })
         .catch((err) => {
@@ -38,9 +38,9 @@ export class Tabizoo extends API {
   async getUserMining() {
     // console.log(this.query);
     return new Promise(async (resolve, reject) => {
-      await this.fetch("/api/mining/info", "GET", "omit")
+      await this.fetch("/api/mining/v1/info", "GET")
         .then((data) => {
-          this.mining = data;
+          this.mining = data.data.mining_data;
           resolve();
         })
         .catch((err) => {
@@ -51,7 +51,7 @@ export class Tabizoo extends API {
   async getUserReward() {
     // console.log(this.query);
     return new Promise(async (resolve, reject) => {
-      await this.fetch("/api/reward-pool/info", "GET", "omit")
+      await this.fetch("/api/reward-pool/info", "GET")
         .then((data) => {
           this.pool = data;
           resolve();
@@ -62,12 +62,15 @@ export class Tabizoo extends API {
     });
   }
 
-  async getUserReward() {
+  async getTask() {
     // console.log(this.query);
     return new Promise(async (resolve, reject) => {
-      await this.fetch("/api/reward-pool/info", "GET", "omit")
+      await this.fetch("/api/task/v1/list", "GET")
         .then((data) => {
-          this.pool = data;
+          this.task = [];
+          data.data.map((item) => {
+            this.task.push(...item.task_list);
+          });
           resolve();
         })
         .catch((err) => {
@@ -79,9 +82,9 @@ export class Tabizoo extends API {
   async checkIn() {
     // console.log(this.query);
     return new Promise(async (resolve, reject) => {
-      await this.fetch("/api/user/check-in", "POST", "omit")
+      await this.fetch("/api/user/v1/check-in", "POST")
         .then((data) => {
-          this.user = data;
+          this.user = data.data.user;
           resolve();
         })
         .catch((err) => {
@@ -93,7 +96,7 @@ export class Tabizoo extends API {
   async levelUp() {
     // console.log(this.query);
     return new Promise(async (resolve, reject) => {
-      await this.fetch("/api/user/level-up", "POST", "omit")
+      await this.fetch("/api/user/level-up", "POST")
         .then(async (data) => {
           this.user = data;
           await this.getUserMining().then(resolve);
@@ -107,11 +110,38 @@ export class Tabizoo extends API {
   async claimMining() {
     // console.log(this.query);
     return new Promise(async (resolve, reject) => {
-      await this.fetch("/api/mining/claim", "POST", "omit")
+      await this.fetch("/api/mining/v1/claim", "POST")
         .then(async (data) => {
           await this.getUserMining().then(resolve);
           await this.getUserProfile().then(resolve);
           return data;
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+  async getSpinInfo() {
+    // console.log(this.query);
+    return new Promise(async (resolve, reject) => {
+      await this.fetch("/api/spin/v1/info", "POST")
+        .then(async (data) => {
+          this.spin = data.data;
+          resolve();
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+  async playSpin() {
+    // console.log(this.query);
+    return new Promise(async (resolve, reject) => {
+      const body = { multiplier: 2 };
+      await this.fetch("/api/spin/v1/play", "POST", body)
+        .then(async (data) => {
+          this.spin = data.data;
+          resolve();
         })
         .catch((err) => {
           reject(err);
